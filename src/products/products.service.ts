@@ -9,7 +9,9 @@ export class ProductsService {
   constructor(private prisma: PrismaService) { }
 
   async create(createProductDto: CreateProductDto) {
+
     console.log({ createProductDto });
+
     const product = await this.prisma.product.create({
       data: createProductDto,
     })
@@ -17,9 +19,10 @@ export class ProductsService {
   }
 
   findAll() {
-    return `This action returns all products`;
+    return this.prisma.product.findMany({});
+    // return `This action returns all products`;
   }
-
+ 
   findOne(id: number) {
     return `This action returns a #${id} product`;
   }
