@@ -18,14 +18,25 @@ export class ProductsService {
     return product;
   }
 
-  findAll(paginationDto: PaginationDto) {
+  async findAll(paginationDto: PaginationDto) {
 
-    const { page, limit } = paginationDto; 
+    const { page, limit } = paginationDto;
 
-    return this.prisma.product.findMany({
-      take: limit,
-      skip: (Number(page) - 1) * Number(limit),
-    });
+    const totalPage = await this.prisma.product.count();
+    const lastPage = Math.ceil(totalPage / Number(limit));
+
+
+    return {
+      data: await this.prisma.product.findMany({
+        take: limit,
+        skip: (Number(page) - 1) * Number(limit),
+      }),
+      meta: {
+        total: totalPage,
+        page: page,
+        lastPage: lastPage,
+      }
+    }
   }
 
   findOne(id: number) {
