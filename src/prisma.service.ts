@@ -1,4 +1,3 @@
-
 import { Injectable } from "@nestjs/common";
 import { PrismaClient } from "./generated/prisma/client.js";
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
@@ -6,7 +5,9 @@ import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
 @Injectable()
 export class PrismaService extends PrismaClient {
   constructor() {
-    const adapter = new PrismaBetterSqlite3(process.env.DATABASE_URL as string);
+    const adapter = new PrismaBetterSqlite3({
+      connectionString: process.env.DATABASE_URL as string,
+    });
     super({ adapter });
   }
 }
