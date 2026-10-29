@@ -18,8 +18,14 @@ export class ProductsService {
     return product;
   }
 
-  async findAll() {
-    return this.prisma.product.findMany({});
+  findAll(paginationDto: PaginationDto) {
+
+    const { page, limit } = paginationDto; 
+
+    return this.prisma.product.findMany({
+      take: limit,
+      skip: (Number(page) - 1) * Number(limit),
+    });
   }
 
   findOne(id: number) {
