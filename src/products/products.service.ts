@@ -58,9 +58,9 @@ export class ProductsService {
     });
   }
 
-  remove(id: number) {
-    const product = this.findOne(id);
-    if (!product) {
+  async remove(id: number) {
+    await this.findOne(id);
+    if (!id) {
       throw new NotFoundException('Product not found');
     }
     return this.prisma.product.delete({
