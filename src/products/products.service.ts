@@ -63,6 +63,8 @@ export class ProductsService {
     if (!product) {
       throw new NotFoundException('Product not found');
     }
-    return `Product ${product.name} removed`;
+    return this.prisma.product.delete({
+      where: { id },
+    });
   }
 }
