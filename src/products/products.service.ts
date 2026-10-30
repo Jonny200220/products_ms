@@ -28,6 +28,7 @@ export class ProductsService {
       data: await this.prisma.product.findMany({
         take: limit,
         skip: (Number(page) - 1) * Number(limit),
+        where: { available: true },
       }),
       meta: {
         total: totalPage,
