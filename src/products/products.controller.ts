@@ -30,6 +30,6 @@ export class ProductsController {
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.productsService.remove(id);
+    return this.productsService.softRemove(id);
   }
 }

@@ -20,7 +20,9 @@ export class ProductsService {
   async findAll(paginationDto: PaginationDto) {
     const { page, limit } = paginationDto;
 
-    const totalPage = await this.prisma.product.count();
+    const totalPage = await this.prisma.product.count({
+      where: { available: true },
+    });
     const lastPage = Math.ceil(totalPage / Number(limit));
     return {
       data: await this.prisma.product.findMany({
@@ -37,7 +39,10 @@ export class ProductsService {
 
   async findOne(id: number) {
     const product = await this.prisma.product.findFirst({
-      where: { id },
+      where: { 
+        id,
+        available: true,
+       },
     });
     if (!product) {
       throw new NotFoundException('Product not found');
@@ -58,13 +63,30 @@ export class ProductsService {
     });
   }
 
-  async remove(id: number) {
+  // hard delete
+  // async remove(id: number) {
+  //   await this.findOne(id);
+  //   if (!id) {
+  //     throw new NotFoundException('Product not found');
+  //   }
+  //   return this.prisma.product.delete({
+  //     where: { id },
+  //   });
+  // }
+
+  //soft delete
+  async softRemove(id: number) {
     await this.findOne(id);
     if (!id) {
       throw new NotFoundException('Product not found');
-    }
-    return this.prisma.product.delete({
+    };
+    const product = await this.prisma.product.update({
       where: { id },
+      data: { available: false }
     });
+
+    return `Product ${product.name} removed`;
   }
+
+
 }
